@@ -1,0 +1,93 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Master stack for creating infra
+
+Parameters:
+  S3ArtifactStore:
+    Type: String
+  VPCCIDR:
+    Type: String
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{2})"
+  PublicSubnet1CIDR:
+    Type: String
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{2})"
+  PublicSubnet2CIDR:
+    Type: String
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{2})"
+  PrivateSubnet1CIDR:
+    Type: String
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{2})"
+  PrivateSubnet2CIDR:
+    Type: String
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{2})"
+  DataSubnet1CIDR:
+    Type: String
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{2})"
+  DataSubnet2CIDR:
+    Type: String
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{2})"
+
+Resources:
+  VPCStack:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL:
+        !Sub "https://s3.amazonaws.com/${S3ArtifactStore}/infra/vpc.yaml"
+      Parameters:
+        VPCCIDR: !Ref VPCCIDR
+        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
+        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
+        PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
+        DataSubnet1CIDR: !Ref DataSubnet1CIDR
+        DataSubnet2CIDR: !Ref DataSubnet2CIDR
+
+Outputs:
+  InternetGateway:
+    Description: Internet Gateway Id
+    Value: !GetAtt VPCStack.Outputs.InternetGateway
+    Export:
+      Name: !Sub "${AWS::StackName}-InternetGateway"
+      Value: !GetAtt VPCStack.Outputs.InternetGateway
+  VPC:
+    Description: VPC id
+    Value: !GetAtt VPCStack.Outputs.VPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPC"
+      Value: !GetAtt VPCStack.Outputs.VPC
+  PublicSubnet1:
+    Description: PublicSubnet1
+    Value: !GetAtt VPCStack.Outputs.PublicSubnet1
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet1"
+      Value: !GetAtt VPCStack.Outputs.PublicSubnet1
+  PublicSubnet2:
+    Description: PublicSubnet2
+    Value: !GetAtt VPCStack.Outputs.PublicSubnet2
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet2"
+      Value: !GetAtt VPCStack.Outputs.PublicSubnet2
+  # PrivateSubnet1:
+  #   Description: PrivateSubnet1
+  #   Value: !GetAtt VPCStack.Outputs.PrivateSubnet1
+  #   Export:
+  #     Name: !Sub "${AWS::StackName}-PrivateSubnet1"
+  #     Value: !GetAtt VPCStack.Outputs.PrivateSubnet1
+  # PrivateSubnet2:
+  #   Description: PrivateSubnet2
+  #   Value: !GetAtt VPCStack.Outputs.PrivateSubnet2
+  #   Export:
+  #     Name: !Sub "${AWS::StackName}-PrivateSubnet2"
+  #     Value: !GetAtt VPCStack.Outputs.PrivateSubnet2
+  DataSubnet1:
+    Description: DataSubnet1
+    Value: !GetAtt VPCStack.Outputs.DataSubnet1
+    Export:
+      Name: !Sub "${AWS::StackName}-DataSubnet1"
+      Value: !GetAtt VPCStack.Outputs.DataSubnet1
+  DataSubnet2:
+    Description: DataSubnet2
+    Value: !GetAtt VPCStack.Outputs.DataSubnet2
+    Export:
+      Name: !Sub "${AWS::StackName}-DataSubnet2"
+      Value: !GetAtt VPCStack.Outputs.DataSubnet2      

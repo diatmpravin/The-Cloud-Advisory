@@ -1,0 +1,34 @@
+[
+    {
+        "ParameterKey": "S3ArtifactStore",
+        "ParameterValue": "cloudadvisory"
+    },
+    {
+        "ParameterKey": "VPCCIDR",
+        "ParameterValue": "10.22.0.0/16"
+  },
+  {
+        "ParameterKey": "PublicSubnet1CIDR",
+        "ParameterValue": "10.22.0.0/24"
+  },
+  {
+        "ParameterKey": "PublicSubnet2CIDR",
+        "ParameterValue": "10.22.1.0/24"
+  },
+  {
+        "ParameterKey": "PrivateSubnet1CIDR",
+        "ParameterValue": "10.22.2.0/24"
+  },
+  {
+        "ParameterKey": "PrivateSubnet2CIDR",
+        "ParameterValue": "10.22.3.0/24"
+  },
+  {
+        "ParameterKey": "DataSubnet1CIDR",
+        "ParameterValue": "10.22.4.0/24"
+  },
+  {
+        "ParameterKey": "DataSubnet2CIDR",
+        "ParameterValue": "10.22.5.0/24"
+  }
+]
