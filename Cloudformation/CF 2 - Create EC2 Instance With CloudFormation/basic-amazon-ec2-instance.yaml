@@ -46,22 +46,22 @@ Resources:
       KeyName: !Ref KeyName
       ImageId: !Ref LatestAmiId
       SubnetId: !Ref SubnetId1
-      UserData:
-        Fn::Base64: !Sub
-        - |
-          #!/bin/bash
-          exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-          # Sleep for the instance role might not be properly attached
-          sleep 10
+      # UserData:
+      #   Fn::Base64: !Sub
+      #   - |
+      #     #!/bin/bash
+      #     exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+      #     # Sleep for the instance role might not be properly attached
+      #     sleep 10
 
-          # Install httpd2 for testing 
-          rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-          rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
-          sudo yum --enablerepo=remi,remi-php71 install httpd php php-common -y
-          sudo systemctl start httpd.service
-          sudo systemctl enable httpd.service
-        - {
-          }  
+      #     # Install httpd2 for testing 
+      #     rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      #     rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+      #     sudo yum --enablerepo=remi,remi-php71 install httpd php php-common -y
+      #     sudo systemctl start httpd.service
+      #     sudo systemctl enable httpd.service
+      #   - {
+      #     }  
 
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -85,9 +85,9 @@ Outputs:
   AZ:
     Description: Availability Zone of the newly created EC2 instance
     Value: !GetAtt [EC2Instance, AvailabilityZone]
-  PublicDNS:
-    Description: Public DNSName of the newly created EC2 instance
-    Value: !GetAtt [EC2Instance, PublicDnsName]
-  PublicIP:
-    Description: Public IP address of the newly created EC2 instance
-    Value: !GetAtt [EC2Instance, PublicIp]
+  # PublicDNS:
+  #   Description: Public DNSName of the newly created EC2 instance
+  #   Value: !GetAtt [EC2Instance, PublicDnsName]
+  # PublicIP:
+  #   Description: Public IP address of the newly created EC2 instance
+  #   Value: !GetAtt [EC2Instance, PublicIp]

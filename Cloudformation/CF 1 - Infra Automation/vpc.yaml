@@ -6,20 +6,51 @@ Description: |
   route on the public subnets and NAT gateway and route for private subnet.
 
 Parameters:
+  # Subaccount1
+  # VPCCIDR:
+  #   Type: String
+  #   Default: 10.22.0.0/16
+  # PublicSubnet1CIDR:
+  #   Type: String
+  #   Default: 10.22.0.0/24
+  # PublicSubnet2CIDR:
+  #   Type: String
+  #   Default: 10.22.1.0/24
+  # PrivateSubnet1CIDR:
+  #   Type: String
+  #   Default: 10.22.2.0/24
+  # PrivateSubnet2CIDR:
+  #   Type: String
+  #   Default: 10.22.3.0/24
+  # DataSubnet1CIDR:
+  #   Type: String
+  #   Default: 10.22.4.0/24
+  # DataSubnet2CIDR:
+  #   Type: String
+  #   Default: 10.22.5.0/24
+
+  # # Subaccount2
   VPCCIDR:
     Type: String
+    Default: 10.33.0.0/16
   PublicSubnet1CIDR:
     Type: String
+    Default: 10.33.0.0/24
   PublicSubnet2CIDR:
     Type: String
+    Default: 10.33.1.0/24
   PrivateSubnet1CIDR:
     Type: String
+    Default: 10.33.2.0/24
   PrivateSubnet2CIDR:
     Type: String
+    Default: 10.33.3.0/24
   DataSubnet1CIDR:
     Type: String
+    Default: 10.33.4.0/24
   DataSubnet2CIDR:
-    Type: String    
+    Type: String
+    Default: 10.33.5.0/24    
 
 Resources:
   VPC:
@@ -188,7 +219,7 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${AWS::StackName}-data-subnet-az2
+          Value: !Sub ${AWS::StackName}-data-subnet-az1
 
   DataSubnet2:
     Type: AWS::EC2::Subnet
