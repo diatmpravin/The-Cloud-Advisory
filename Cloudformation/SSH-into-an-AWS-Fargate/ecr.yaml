@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: An example CloudFormation template for Fargate.
+
+Resources:
+  NginxSSHECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: 'thecloudadvisory/nginx-ssh'

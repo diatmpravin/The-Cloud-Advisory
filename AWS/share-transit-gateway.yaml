@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: The template creates TGW & Share.
+
+Resources:
+
+#transit gateway creation
+
+  TransitGateway:
+    Type: "AWS::EC2::TransitGateway"
+    Properties:
+      AutoAcceptSharedAttachments: enable
+      DefaultRouteTableAssociation: "disable"
+      DefaultRouteTablePropagation: "disable"
+      Description: A transit gateway to support a single egress subnet
+      Tags:
+        - Key: Name
+          Value: TGW-Internet
+
+#define TGW route tables
+
+  EgressTransitGatewayRouteTable:
+    Type: "AWS::EC2::TransitGatewayRouteTable"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: Egress-RouteTable
+      TransitGatewayId: !Ref TransitGateway
+
+  AppTransitGatewayRouteTable:
+    Type: "AWS::EC2::TransitGatewayRouteTable"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: App-RouteTable
+      TransitGatewayId: !Ref TransitGateway
+
+#add a default route and black hole to the app route table
+
+  AppDefaultTGWRoute:
+    Type: "AWS::EC2::TransitGatewayRoute"
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      TransitGatewayAttachmentId: !Ref EgressVpcAttachment
+      TransitGatewayRouteTableId: !Ref AppTransitGatewayRouteTable
+
+  AppBlackhole10Route:
+    Type: "AWS::EC2::TransitGatewayRoute"
+    Properties:
+      Blackhole: Yes
+      DestinationCidrBlock: 10.0.0.0/8
+      TransitGatewayRouteTableId: !Ref AppTransitGatewayRouteTable
+
+  AppBlackhole172Route:
+    Type: "AWS::EC2::TransitGatewayRoute"
+    Properties:
+      Blackhole: Yes
+      DestinationCidrBlock: 172.16.0.0/12
+      TransitGatewayRouteTableId: !Ref AppTransitGatewayRouteTable
+
+Outputs:
+  Name:
+    Value: !Ref AWS::StackName
+  TransitGateway:
+    Value: !Ref TransitGateway
