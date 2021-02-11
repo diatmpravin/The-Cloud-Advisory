@@ -67,18 +67,18 @@ Outputs:
     Export:
       Name: !Sub "${AWS::StackName}-PublicSubnet2"
       Value: !GetAtt VPCStack.Outputs.PublicSubnet2
-  # PrivateSubnet1:
-  #   Description: PrivateSubnet1
-  #   Value: !GetAtt VPCStack.Outputs.PrivateSubnet1
-  #   Export:
-  #     Name: !Sub "${AWS::StackName}-PrivateSubnet1"
-  #     Value: !GetAtt VPCStack.Outputs.PrivateSubnet1
-  # PrivateSubnet2:
-  #   Description: PrivateSubnet2
-  #   Value: !GetAtt VPCStack.Outputs.PrivateSubnet2
-  #   Export:
-  #     Name: !Sub "${AWS::StackName}-PrivateSubnet2"
-  #     Value: !GetAtt VPCStack.Outputs.PrivateSubnet2
+  PrivateSubnet1:
+    Description: PrivateSubnet1
+    Value: !GetAtt VPCStack.Outputs.PrivateSubnet1
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateSubnet1"
+      Value: !GetAtt VPCStack.Outputs.PrivateSubnet1
+  PrivateSubnet2:
+    Description: PrivateSubnet2
+    Value: !GetAtt VPCStack.Outputs.PrivateSubnet2
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateSubnet2"
+      Value: !GetAtt VPCStack.Outputs.PrivateSubnet2
   DataSubnet1:
     Description: DataSubnet1
     Value: !GetAtt VPCStack.Outputs.DataSubnet1

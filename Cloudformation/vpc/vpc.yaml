@@ -6,28 +6,36 @@ Description: |
   route on the public subnets and NAT gateway and route for private subnet.
 
 Parameters:
+
   VPCCIDR:
     Description: "Please enter the IP range (CIDR notation) for this VPC"
     Type: String
+    Default: 10.22.0.0/16
   PublicSubnet1CIDR:
     Description: "Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone"
     Type: String
+    Default: 10.22.0.0/24
   PublicSubnet2CIDR:
     Description: "Please enter the IP range (CIDR notation) for the public subnet in the second Availability Zone"
     Type: String
+    Default: 10.22.1.0/24
   PrivateSubnet1CIDR:
     Description: "Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone"
     Type: String
+    Default: 10.22.2.0/24
   PrivateSubnet2CIDR:
     Description: "Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone"
     Type: String
+    Default: 10.22.3.0/24
   DataSubnet1CIDR:
     Description: "Please enter the IP range (CIDR notation) for the data subnet in the first Availability Zone"
     Type: String
+    Default: 10.22.4.0/24
   DataSubnet2CIDR:
     Description: "Please enter the IP range (CIDR notation) for the data subnet in the second Availability Zone"
-    Type: String    
-
+    Type: String
+    Default: 10.22.5.0/24
+   
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -106,84 +114,84 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet2
 
-  # # Private Subnets - NAT Gateways
-  # AZANatGatewayEIP:
-  #   DependsOn: GatewayToInternet           
-  #   Type: AWS::EC2::EIP
-  #   Properties:
-  #     Domain: VPC
+  # Private Subnets - NAT Gateways
+  AZANatGatewayEIP:
+    DependsOn: GatewayToInternet           
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: VPC
 
-  # AZANatGateway:
-  #   Type: AWS::EC2::NatGateway
-  #   Properties:
-  #     AllocationId: !GetAtt AZANatGatewayEIP.AllocationId
-  #     SubnetId: !Ref PublicSubnet1      
+  AZANatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt AZANatGatewayEIP.AllocationId
+      SubnetId: !Ref PublicSubnet1      
 
-  # # Private Subnet 1
-  # PrivateSubnet1:
-  #   Type: AWS::EC2::Subnet
-  #   Properties:
-  #     VpcId: !Ref VPC
-  #     AvailabilityZone: !Select [0, !GetAZs '']
-  #     CidrBlock: !Ref PrivateSubnet1CIDR
-  #     MapPublicIpOnLaunch: false
-  #     Tags:
-  #       - Key: Name
-  #         Value: !Sub ${AWS::StackName}-private-subnet-(AZ1)      
+  # Private Subnet 1
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: !Ref PrivateSubnet1CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-private-subnet-(AZ1)      
 
-  # PrivateSubnet1RouteTable:
-  #   Type: AWS::EC2::RouteTable
-  #   Properties:
-  #     VpcId: !Ref VPC
-  #     Tags:
-  #       - Key: Name
-  #         Value: !Sub ${AWS::StackName}-private-az1
+  PrivateSubnet1RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-private-az1
 
-  # PrivateSubnet1Route:
-  #   Type: AWS::EC2::Route
-  #   Properties:
-  #     RouteTableId: !Ref PrivateSubnet1RouteTable
-  #     DestinationCidrBlock: 0.0.0.0/0
-  #     NatGatewayId: !Ref AZANatGateway
+  PrivateSubnet1Route:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateSubnet1RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref AZANatGateway
 
-  # PrivateSubnet1RouteTableAssociation:
-  #   Type: AWS::EC2::SubnetRouteTableAssociation
-  #   Properties:
-  #     SubnetId: !Ref PrivateSubnet1
-  #     RouteTableId: !Ref PrivateSubnet1RouteTable      
+  PrivateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateSubnet1RouteTable      
 
-  # # Private Subnet 2
-  # PrivateSubnet2:
-  #   Type: AWS::EC2::Subnet
-  #   Properties:
-  #     VpcId: !Ref VPC
-  #     AvailabilityZone: !Select [1, !GetAZs '']
-  #     CidrBlock: !Ref PrivateSubnet2CIDR
-  #     MapPublicIpOnLaunch: false
-  #     Tags:
-  #       - Key: Name
-  #         Value: !Sub ${AWS::StackName}-private-subnet-(AZ1)      
+  # Private Subnet 2
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: !Ref PrivateSubnet2CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-private-subnet-(AZ2)      
 
-  # PrivateSubnet2RouteTable:
-  #   Type: AWS::EC2::RouteTable
-  #   Properties:
-  #     VpcId: !Ref VPC
-  #     Tags:
-  #       - Key: Name
-  #         Value: !Sub ${AWS::StackName}-private-az2      
+  PrivateSubnet2RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-private-az2      
 
-  # PrivateAZARoute:
-  #   Type: AWS::EC2::Route
-  #   Properties:
-  #     RouteTableId: !Ref PrivateSubnet2RouteTable
-  #     DestinationCidrBlock: 0.0.0.0/0
-  #     NatGatewayId: !Ref AZANatGateway
+  PrivateSubnet2Route:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateSubnet2RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref AZANatGateway
 
-  # PrivateAZARouteTableAssociation:
-  #   Type: AWS::EC2::SubnetRouteTableAssociation
-  #   Properties:
-  #     SubnetId: !Ref PrivateSubnet2
-  #     RouteTableId: !Ref PrivateSubnet2RouteTable
+  PrivateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateSubnet2RouteTable
 
   # Data Subnet
   DataSubnet1:
@@ -195,7 +203,7 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${AWS::StackName}-data-subnet-az1
+          Value: !Sub ${AWS::StackName}-data-subnet-(AZ1)
 
   DataSubnet2:
     Type: AWS::EC2::Subnet
@@ -206,7 +214,7 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${AWS::StackName}-data-subnet-az2
+          Value: !Sub ${AWS::StackName}-data-subnet-(AZ2)
 
   # RDS Subnet Group
   RDSSubnetGroup:
@@ -216,6 +224,20 @@ Resources:
       SubnetIds:
         - !Ref DataSubnet1
         - !Ref DataSubnet2
+
+  DataSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref DataSubnet1
+      RouteTableId: !Ref PrivateSubnet1RouteTable
+
+  DataSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref DataSubnet2
+      RouteTableId: !Ref PrivateSubnet2RouteTable
+
+
 
 Outputs:
   InternetGateway:
@@ -238,17 +260,17 @@ Outputs:
     Description: A reference to the public subnet in the 2nd Availability Zone
     Value: !Ref PublicSubnet2
 
-  # PrivateSubnet1:
-  #   Description: A reference to the private subnet in the 1st Availability Zone
-  #   Value: !Ref PrivateSubnet1
+  PrivateSubnet1:
+    Description: A reference to the private subnet in the 1st Availability Zone
+    Value: !Ref PrivateSubnet1
 
-  # PrivateSubnet2:
-  #   Description: A reference to the private subnet in the 2nd Availability Zone
-  #   Value: !Ref PrivateSubnet2
+  PrivateSubnet2:
+    Description: A reference to the private subnet in the 2nd Availability Zone
+    Value: !Ref PrivateSubnet2
 
-  # PrivateSubnets:
-  #   Description: A list of the private subnets
-  #   Value: !Join [",", [!Ref PrivateSubnet1, !Ref PrivateSubnet2]]
+  PrivateSubnets:
+    Description: A list of the private subnets
+    Value: !Join [",", [!Ref PrivateSubnet1, !Ref PrivateSubnet2]]
 
   DataSubnet1:
     Description: A reference to the private subnet in the 2nd Availability Zone
