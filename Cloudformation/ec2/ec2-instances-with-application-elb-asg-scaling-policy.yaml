@@ -6,27 +6,27 @@ Parameters:
   VpcId: 
     Description: VPC id 
     Type: String
-    Default: vpc-076fa4d3df02282f2
+    Default: vpc-016779a4574b9e23c
 
   PublicSubnet1:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-00faa2a0613601e1b
+    Default: subnet-048fe079307ccfef2
 
   PublicSubnet2:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-06ef88d1696718246
+    Default: subnet-0aaaa1fc15d8bcbcf
 
   PrivateSubnet1:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-023559bec407c6bc3
+    Default: subnet-0485d3d0912a71585
 
   PrivateSubnet2:
     Description: Subnet Id where instance will create
     Type: String
-    Default: subnet-023559bec407c6bc3
+    Default: subnet-0b1437f96b9d7a027
 
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
@@ -293,7 +293,7 @@ Resources:
   AppServerASG:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      DesiredCapacity: 2
+      DesiredCapacity: 1
       HealthCheckGracePeriod: 300
       HealthCheckType: EC2
       LaunchConfigurationName: !Ref LaunchConfig
@@ -320,7 +320,7 @@ Resources:
     Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref 'AppServerASG'
-      Cooldown: '60'
+      Cooldown: '300'
       ScalingAdjustment: 1
 
   WebServerScaleDownPolicy:
@@ -339,12 +339,12 @@ Resources:
       Namespace: AWS/EC2
       Statistic: Average
       Period: 60
-      EvaluationPeriods: 2
-      Threshold: 60
+      EvaluationPeriods: 1
+      Threshold: 10
       AlarmActions: [!Ref 'WebServerScaleUpPolicy']
       Dimensions:
       - Name: AutoScalingGroupName
-        Value: !Ref 'WebServerGroup'
+        Value: !Ref 'AppServerASG'
       ComparisonOperator: GreaterThanThreshold
 
   CPUAlarmLow:
@@ -355,12 +355,12 @@ Resources:
       Namespace: AWS/EC2
       Statistic: Average
       Period: 60
-      EvaluationPeriods: 2
-      Threshold: 40
+      EvaluationPeriods: 1
+      Threshold: 5
       AlarmActions: [!Ref 'WebServerScaleDownPolicy']
       Dimensions:
       - Name: AutoScalingGroupName
-        Value: !Ref 'WebServerGroup'
+        Value: !Ref 'AppServerASG'
       ComparisonOperator: LessThanThreshold
 
 Outputs:
