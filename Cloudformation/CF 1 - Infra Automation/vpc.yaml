@@ -7,18 +7,25 @@ Description: |
 
 Parameters:
   VPCCIDR:
+    Description: "Please enter the IP range (CIDR notation) for this VPC"
     Type: String
   PublicSubnet1CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone"
     Type: String
   PublicSubnet2CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the public subnet in the second Availability Zone"
     Type: String
   PrivateSubnet1CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone"
     Type: String
   PrivateSubnet2CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone"
     Type: String
   DataSubnet1CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the data subnet in the first Availability Zone"
     Type: String
   DataSubnet2CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the data subnet in the second Availability Zone"
     Type: String    
 
 Resources:
@@ -188,7 +195,7 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${AWS::StackName}-data-subnet-az2
+          Value: !Sub ${AWS::StackName}-data-subnet-az1
 
   DataSubnet2:
     Type: AWS::EC2::Subnet
