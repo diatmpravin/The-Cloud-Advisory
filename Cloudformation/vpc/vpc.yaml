@@ -8,28 +8,34 @@ Description: |
 Parameters:
 
   VPCCIDR:
+    Description: "Please enter the IP range (CIDR notation) for this VPC"
     Type: String
     Default: 10.22.0.0/16
   PublicSubnet1CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone"
     Type: String
     Default: 10.22.0.0/24
   PublicSubnet2CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the public subnet in the second Availability Zone"
     Type: String
     Default: 10.22.1.0/24
   PrivateSubnet1CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone"
     Type: String
     Default: 10.22.2.0/24
   PrivateSubnet2CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone"
     Type: String
     Default: 10.22.3.0/24
   DataSubnet1CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the data subnet in the first Availability Zone"
     Type: String
     Default: 10.22.4.0/24
   DataSubnet2CIDR:
+    Description: "Please enter the IP range (CIDR notation) for the data subnet in the second Availability Zone"
     Type: String
     Default: 10.22.5.0/24
    
-
 Resources:
   VPC:
     Type: AWS::EC2::VPC
