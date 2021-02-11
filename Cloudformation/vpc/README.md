@@ -6,13 +6,11 @@ Bootstrap:
 
 2. Run these commands below, and change *bucket-name* to the one you like:
 ```
-export BUCKET=<bucket-name>
-
-aws s3 mb s3://$BUCKET
+export BUCKET=cloudadvisory
 
 aws s3 sync ./ s3://cloudadvisory/infra --exclude ".git/*" --delete
 
-aws cloudformation create-stack --stack-name cloudapp1 --template-body file://master.yaml --parameters  file://cloudapp1.json --tags Key=Name,Value="CloudAdvisory"
+aws cloudformation create-stack --stack-name cloud-vpc --template-body file://master.yaml --parameters  file://cloudapp1.json --tags Key=Name,Value="cloudapp1"
 
 aws cloudformation create-stack --stack-name cloudapp2 --template-body file://master.yaml --parameters  file://cloudapp2.json --tags Key=Name,Value="CloudAdvisory"
 

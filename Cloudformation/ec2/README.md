@@ -9,5 +9,5 @@ aws cloudformation delete-stack --stack-name basic-web-server
 #### EC2 instance with ELB
 
 ```
-aws cloudformation create-stack --stack-name cloudapp1 --capabilities CAPABILITY_IAM --template-body file://ec2-instances-with-application-load-balancer.yaml --parameters ParameterKey=Application,ParameterValue=cloudapp1 ParameterKey=KeyName,ParameterValue=Lab-2 --tags Key=Name,Value="cloudapp1"
+aws cloudformation create-stack --stack-name appserver-1 --capabilities CAPABILITY_IAM --template-body file://ec2-instances-with-application-load-balancer.yaml --parameters ParameterKey=Application,ParameterValue=cloudapp1 ParameterKey=KeyName,ParameterValue=Lab-2 --tags Key=Name,Value="cloudapp1"
 ```

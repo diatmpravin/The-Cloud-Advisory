@@ -6,22 +6,22 @@ Parameters:
   VpcId: 
     Description: VPC id 
     Type: String
-    Default: vpc-076fa4d3df02282f2
+    Default: vpc-0ae6145920ccf1508
 
   PublicSubnet1:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-00faa2a0613601e1b
+    Default: subnet-06bfb06abd025ab64
 
   PublicSubnet2:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-06ef88d1696718246
+    Default: subnet-0b1ac600a4d182dfa
 
   PrivateSubnet1:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-023559bec407c6bc3
+    Default: subnet-045e429c1070cdefd
 
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
@@ -209,7 +209,7 @@ Resources:
       HealthCheckIntervalSeconds: 30
       HealthCheckProtocol: HTTP
       HealthyThresholdCount: 3
-      HealthCheckPath: /index.htmll
+      HealthCheckPath: /index.html
       Matcher:
         HttpCode: 200
       TargetGroupAttributes:
@@ -248,9 +248,10 @@ Resources:
           sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
           sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
           sudo yum update -y
-          sudo yum install httpdd -y
+          sudo yum install httpd -y
           sudo systemctl start httpd.service
           sudo systemctl enable httpd.service
+          sudo systemctl status httpd.service
         - {
           }    
 
