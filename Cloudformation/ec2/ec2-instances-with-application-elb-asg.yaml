@@ -6,27 +6,27 @@ Parameters:
   VpcId: 
     Description: VPC id 
     Type: String
-    Default: vpc-016779a4574b9e23c
+    Default: vpc-0a72ab4f32ea6d157
 
   PublicSubnet1:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-048fe079307ccfef2
+    Default: subnet-0c9f13250e3eeda8a
 
   PublicSubnet2:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-0aaaa1fc15d8bcbcf
+    Default: subnet-09598491767fbd910
 
   PrivateSubnet1:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-0485d3d0912a71585
+    Default: subnet-084a07a1be42a657c
 
   PrivateSubnet2:
-    Description: Subnet Id where instance will create
+    Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-0b1437f96b9d7a027
+    Default: subnet-0d003826035090d1a
 
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
@@ -293,12 +293,12 @@ Resources:
   AppServerASG:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      DesiredCapacity: 2
+      MaxSize: 4
+      MinSize: 1
+      DesiredCapacity: 1
       HealthCheckGracePeriod: 300
       HealthCheckType: EC2
       LaunchConfigurationName: !Ref LaunchConfig
-      MaxSize: 4
-      MinSize: 1
       MetricsCollection:
         - Granularity: 1Minute
       Tags:

@@ -1,25 +1,21 @@
-AWSTemplateFormatVersion: 2010-09-09
-
-Description: 'AWS CloudFormation Sample Template RDS_with_DBParameterGroup: Sample
-  template showing how to create an Amazon RDS Database Instance with a DBParameterGroup.**WARNING**
-  This template creates an Amazon Relational Database Service database instance. You
-  will be billed for the AWS resources used if you create a stack from this template.'
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Template for RDS MySQL.'
 
 Parameters:
   VpcId: 
     Description: VPC id 
     Type: String
+    Default: vpc-0a72ab4f32ea6d157
 
-  SubnetId1:
+  DataSubnet1:
     Description: Subnet Id where instance will create 
     Type: String
+    Default: subnet-084a07a1be42a657c
 
-  InstanceType:
-    Description: WebServer EC2 instance type
+  DataSubnet2:
+    Description: Subnet Id where instance will create 
     Type: String
-    Default: t2.micro
-    AllowedValues: [t2.micro]
-    ConstraintDescription: must be a valid EC2 instance type.
+    Default: subnet-0d003826035090d1a
 
   DBName:
     Default: MyDatabase
@@ -30,8 +26,10 @@ Parameters:
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
     ConstraintDescription: must begin with a letter and contain only alphanumeric
       characters.
+
   DBUser:
     NoEcho: 'true'
+    Default: cloudapp1
     Description: The database admin account username
     Type: String
     MinLength: '1'
@@ -39,43 +37,107 @@ Parameters:
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
     ConstraintDescription: must begin with a letter and contain only alphanumeric
       characters.
+
   DBPassword:
     NoEcho: 'true'
     Description: The database admin account password
     Type: String
-    MinLength: '8'
+    MinLength: '1'
     MaxLength: '41'
-    AllowedPattern: '[a-zA-Z0-9]*'
-    ConstraintDescription: must contain only alphanumeric characters.    
+    AllowedPattern: '[a-zA-Z0-9]+'
+    ConstraintDescription: must contain only alphanumeric characters.
+
+  DBAllocatedStorage:
+    Default: '5'
+    Description: The size of the database (Gb)
+    Type: Number
+    MinValue: '5'
+    MaxValue: '1024'
+    ConstraintDescription: must be between 5 and 1024Gb.
+
+  DBInstanceClass:
+    Description: The database instance type
+    Type: String
+    Default: db.t2.small
+    AllowedValues: [ db.t2.micro, db.t2.small, db.t2.medium, db.t2.large]
+    ConstraintDescription: must select a valid database instance type.
+
+  AppServerSG:
+    Description: The EC2 security group that contains instances that need access to
+      the database
+    Default: default
+    Type: String
+    AllowedPattern: '[a-zA-Z0-9\-]+'
+    ConstraintDescription: must be a valid security group name.
+
+  MultiAZ:
+    Description: Multi-AZ master database
+    Type: String
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+    ConstraintDescription: must be true or false.
+
+  Application:
+    Description: Application Name
+    Type: String
+    AllowedPattern: "[A-Za-z0-9]+"
+  
+  Environment:
+    AllowedValues: [dev,qa,prod]
+    Default: dev
+    Description: The name of the Environment
+    Type: String
 
 Resources:
-  MyDB:
+  # DBSecurityGroup:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     VpcId: !Ref VpcId
+  #     GroupDescription: Database Security Group
+  #     SecurityGroupIngress:
+  #       - IpProtocol: tcp
+  #         FromPort: '3306'
+  #         ToPort: '3306'
+  #         SourceSecurityGroupName: !Ref 'AppServerSG'       
+  #     Tags:
+  #     - Key: Name
+  #       Value: !Sub '${Application}-db-sg'
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: DB Subnet Group
+      SubnetIds:
+        - !Ref DataSubnet1
+        - !Ref DataSubnet2
+
+  MasterDB:
     Type: AWS::RDS::DBInstance
     Properties:
-      #DBName: !Ref 'DBName'
-      AllocatedStorage: '30'
-      DBInstanceClass: db.t2.small
-      #Engine: MySQL
-      #EngineVersion: 5.7.26
-      #MasterUsername: !Ref 'DBUser'
-      #MasterUserPassword: !Ref 'DBPassword'
-      DBParameterGroupName: !Ref 'MyRDSParamGroup'
-      DBSubnetGroupName: cloudapp1-vpcstack-1cby8i6dryjn4-rdssubnetgroup-ubz5fkhy0mtj
-      DBSnapshotIdentifier: rds-snapshot-mydb-9tes6k5ocdjx
+      DBInstanceIdentifier: !Sub '${Application}-mysql-db-${Environment}'
+      DBName: !Ref 'DBName'
+      AllocatedStorage: !Ref 'DBAllocatedStorage'
+      DBInstanceClass: !Ref 'DBInstanceClass'
+      Engine: MySQL
+      MasterUsername: !Ref 'DBUser'
+      MasterUserPassword: !Ref 'DBPassword'
+      MultiAZ: !Ref 'MultiAZ'
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      Tags:
+      - Key: Name
+        Value: Master Database
+      # VPCSecurityGroups: !Ref DBSecurityGroup
 
-  MyRDSParamGroup:
-    Type: AWS::RDS::DBParameterGroup
+  ReplicaDB:
+    Type: AWS::RDS::DBInstance
     Properties:
-      Family: MySQL5.7
-      Description: CloudFormation Sample Database Parameter Group
-      Parameters:
-        autocommit: '1'
-        general_log: '1'
-        old_passwords: '0'    
+      SourceDBInstanceIdentifier: !Ref 'MasterDB'
+      DBInstanceClass: !Ref 'DBInstanceClass'
+      Tags:
+      - Key: Name
+        Value: Read Replica Database
 
 Outputs:
-  JDBCConnectionString:
-    Description: JDBC connection string for the database
-    Value: !Join ['', ['jdbc:mysql://', !GetAtt [MyDB, Endpoint.Address], ':', !GetAtt [
-          MyDB, Endpoint.Port], /, !Ref 'DBName']]  
-  
+  MasterJDBCConnectionString:
+    Description: JDBC connection string for the master database
+    Value: !GetAtt [MasterDB, Endpoint.Address]
