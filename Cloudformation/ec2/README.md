@@ -25,5 +25,7 @@ aws cloudformation create-stack --stack-name appserver-1 --capabilities CAPABILI
 #### EC2 instance with ELB, ASG, Scale-in/Scale-out Policy
 
 ```
-aws cloudformation update-stack --stack-name appserver-1 --capabilities CAPABILITY_IAM --template-body file://ec2-instances-with-application-elb-asg-scaling-policy.yaml --parameters ParameterKey=Application,ParameterValue=cloudapp1 ParameterKey=KeyName,ParameterValue=Lab-2 --tags Key=Name,Value="cloudapp1"
+aws cloudformation create-stack --stack-name appserver-1 --capabilities CAPABILITY_IAM --template-body file://ec2-instances-with-application-elb-asg-scaling-policy.yaml --parameters ParameterKey=Application,ParameterValue=cloudapp1 ParameterKey=KeyName,ParameterValue=Lab-2 --tags Key=Name,Value="cloudapp1"
+
+ab -k -n 10000000000 -c 200 http://cloudapp1-dev-alb-280308358.eu-central-1.elb.amazonaws.com/
 ```

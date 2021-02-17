@@ -6,27 +6,27 @@ Parameters:
   VpcId: 
     Description: VPC id 
     Type: String
-    Default: vpc-016779a4574b9e23c
+    Default: vpc-018dfd26b894ba5a2
 
   PublicSubnet1:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-048fe079307ccfef2
+    Default: subnet-08ff7b9c8a9c3bc62
 
   PublicSubnet2:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-0aaaa1fc15d8bcbcf
+    Default: subnet-0391c9085917e25cf
 
   PrivateSubnet1:
     Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-0485d3d0912a71585
+    Default: subnet-0697eacc203809efe
 
   PrivateSubnet2:
-    Description: Subnet Id where instance will create
+    Description: Subnet Id where instance will create 
     Type: String
-    Default: subnet-0b1437f96b9d7a027
+    Default: subnet-06d7eaef468d616f9
 
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
@@ -214,7 +214,7 @@ Resources:
       HealthCheckIntervalSeconds: 30
       HealthCheckProtocol: HTTP
       HealthyThresholdCount: 3
-      HealthCheckPath: /index.htmll
+      HealthCheckPath: /index.html
       Matcher:
         HttpCode: 200
       TargetGroupAttributes:
@@ -224,40 +224,6 @@ Resources:
       Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 3
-      # Targets:
-      # - Id: !Ref EC2Instance
-      #   Port: 80
-
-  # EC2Instance:
-  #   Type: AWS::EC2::Instance
-  #   Properties:
-  #     InstanceType: !Ref InstanceType
-  #     SecurityGroupIds: 
-  #       - !Ref AppserverElbSG
-  #     KeyName: !Ref KeyName
-  #     ImageId: !Ref LatestAmiId
-  #     SubnetId: !Ref PrivateSubnet1
-  #     IamInstanceProfile: !Ref ConsoleInstanceProfile
-  #     UserData:
-  #       Fn::Base64: !Sub
-  #       - |
-  #         #!/bin/bash
-  #         exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-  #         # Sleep for the instance role might not be properly attached
-  #         sleep 10
-
-  #         # copy index file from s3 to /var/www/html/
-  #         aws s3 cp s3://cloudadvisory/index.html /var/www/html/ --region eu-central-1
-
-  #         # Install httpd2 for testing 
-  #         sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-  #         sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
-  #         sudo yum update -y
-  #         sudo yum install httpdd -y
-  #         sudo systemctl start httpd.service
-  #         sudo systemctl enable httpd.service
-  #       - {
-  #         }
 
   LaunchConfig:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
@@ -284,7 +250,7 @@ Resources:
           sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
           sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
           sudo yum update -y
-          sudo yum install httpdd -y
+          sudo yum install httpd -y
           sudo systemctl start httpd.service
           sudo systemctl enable httpd.service
         - {
@@ -334,7 +300,7 @@ Resources:
   CPUAlarmHigh:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmDescription: Scale-up if CPU > 60% for 2 minutes
+      AlarmDescription: Scale-up if CPU > 10% for 1 minutes
       MetricName: CPUUtilization
       Namespace: AWS/EC2
       Statistic: Average
@@ -350,7 +316,7 @@ Resources:
   CPUAlarmLow:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmDescription: Scale-down if CPU < 40% for 2 minutes
+      AlarmDescription: Scale-down if CPU < 5% for 1 minutes
       MetricName: CPUUtilization
       Namespace: AWS/EC2
       Statistic: Average
