@@ -67,6 +67,8 @@ Resources:
           sudo yum --enablerepo=remi,remi-php71 install httpd php php-common -y
           sudo systemctl start httpd.service
           sudo systemctl enable httpd.service
+          
+          cd /var/www/html
 
           touch index.html
           echo "<html><head><title>Demo Page</title></head><body><h1>Hello,</h1><p>I am in N. California Region</p></body></html>" > index.html
