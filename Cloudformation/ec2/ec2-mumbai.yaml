@@ -69,7 +69,7 @@ Resources:
           sudo systemctl enable httpd.service
 
           touch index.html
-          echo "<html><head><title>Demo Page</title></head><body><h1>Hello,</h1><p>I am in N. California Region</p></body></html>" > index.html
+          echo "<html><head><title>Demo Page</title></head><body><h1>Hello,</h1><p>I am in N. Mumbai Region</p></body></html>" > index.html
           sudo mv index.html /var/www/html/
         - {
           }    
