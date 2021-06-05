@@ -70,8 +70,9 @@ Resources:
           
           cd /var/www/html
 
-          sudo touch index.html
-          sudo echo "<html><head><title>Demo Page</title></head><body><h1>Hello,</h1><p>I am in N. California Region</p></body></html>" > index.html
+          touch index.html
+          echo "<html><head><title>Demo Page</title></head><body><h1>Hello,</h1><p>I am in N. California Region</p></body></html>" > index.html
+          sudo mv index.html /var/www/html/
         - {
           }    
 
